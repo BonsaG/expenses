@@ -40,7 +40,19 @@ void _submitExpenseData() {
 if (_titleController.text.trim().isEmpty ||
     amountIsInvalid ||
     _selectedDate == null) {
-      return; // invalid input
+     showDialog(context: context, builder: (ctx)=> AlertDialog(
+      title: const Text('Invalid Input'),
+      content: const Text('Please make sure a valid title, amount, and date was entered.'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(ctx);
+          },
+          child: const Text('Okay'),
+        ),
+      ],
+     ));
+      return;
     }
 
     Navigator.pop(
@@ -52,7 +64,7 @@ if (_titleController.text.trim().isEmpty ||
         category: _selectedCategory,
       ),
     );
-//  show error mesage
+ 
 }
 
   @override
@@ -88,25 +100,27 @@ if (_titleController.text.trim().isEmpty ||
                 ),
               ),
               const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      _selectedDate == null
-                          ? 'No date selected'
-                          : formatter.format(_selectedDate!),
-                    ),
-                    IconButton(
-                      onPressed: _presentDatePicker,
-                      icon: const Icon(
-                        Icons.calendar_month,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+           Expanded(
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.end,
+    children: [
+      Expanded(
+        child: Text(
+          _selectedDate == null
+              ? 'No date selected'
+              : formatter.format(_selectedDate!),
+          overflow: TextOverflow.ellipsis,
+          textAlign: TextAlign.right,
+        ),
+      ),
+      IconButton(
+        onPressed: _presentDatePicker,
+        icon: const Icon(Icons.calendar_month),
+      ),
+    ],
+  ),
+),
+
             ],
           ),
           const SizedBox(height: 16),
