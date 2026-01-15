@@ -26,6 +26,13 @@ class _ExpensesState extends State<Expenses> {
       category: Category.leisure,
     ),
   ];
+  void _addExpense() {
+    print('Add expense...');
+    showModalBottomSheet(
+      context: context, 
+      builder: (ctx) => const Text('This is a modal sheet'),
+      );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +41,7 @@ class _ExpensesState extends State<Expenses> {
         title: const Text('Expense Tracker'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: _addExpense,
             icon: const Icon(Icons.add),
           ),
         ],
