@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:expense_tracker/models/expense.dart';
 
 class ExpenseItem extends StatelessWidget {
-  const ExpenseItem({super.key, required this.expense});
+  const ExpenseItem(this.expense, {super.key});
 
   final Expense expense;
 
@@ -10,7 +11,10 @@ class ExpenseItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 16,
+        ),
         child: Column(
           children: [
             Text(expense.title),
@@ -30,8 +34,7 @@ class ExpenseItem extends StatelessWidget {
             ),
           ],
         ),
-      ), 
-      );
-  
+      ),
+    );
   }
 }

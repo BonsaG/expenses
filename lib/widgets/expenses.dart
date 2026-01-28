@@ -31,13 +31,55 @@ class _ExpensesState extends State<Expenses> {
 
   void _openAddExpenseOverlay() {
     showModalBottomSheet(
+      isScrollControlled: true,
       context: context,
-      builder: (ctx) => const NewExpense(),
+      builder: (ctx) => NewExpense(onAddExpense: _addExpense),
     );
   }
+ void _addExpense(Expense expense) {
+    setState(() {
+      _registeredExpenses.add(expense);
+    });
+  }
+
+void _removeExpense(Expense expense) {
+  final expenseIndex = _registeredExpenses.indexOf(expense);
+  setState(() {
+    _registeredExpenses.remove(expense);
+  });
+
+  ScaffoldMessenger.of(context).clearSnackBars();
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: const Text('Expense deleted.'),
+      duration: const Duration(seconds: 3),
+      action: SnackBarAction(
+        label: 'Undo',
+        onPressed: () {
+          setState(() {
+            _registeredExpenses.insert(
+              expenseIndex,
+              expense,
+            );
+          });
+        },
+      ),
+    ), 
+  );
+}
 
   @override
   Widget build(BuildContext context) {
+  Widget mainContent = const Center(
+      child: Text('No expenses found. Start adding some!'),
+    );
+
+    if (_registeredExpenses.isNotEmpty) {
+      mainContent = ExpensesList(
+        expenses: _registeredExpenses,
+        onRemoveExpense: _removeExpense,
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flutter ExpenseTracker'),
@@ -52,25 +94,7 @@ class _ExpensesState extends State<Expenses> {
         children: [
           const Text('The chart'),
           Expanded(
-            child: _registeredExpenses.isEmpty
-                ? const Center(child: Text('No expenses found.'))
-                : ListView.builder(
-                    itemCount: _registeredExpenses.length,
-                    itemBuilder: (ctx, index) {
-                      final exp = _registeredExpenses[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: FittedBox(child: Text('\$${exp.amount}')),
-                          ),
-                        ),
-                        title: Text(exp.title),
-                        subtitle: Text(
-                            '${exp.date.day}/${exp.date.month}/${exp.date.year}'),
-                      );
-                    },
-                  ),
+            child: mainContent,
           ),
         ],
       ),
